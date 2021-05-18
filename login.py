@@ -2,7 +2,7 @@ from connections import *
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
-
+from main import *
 
 class Login:
     def __init__(self):
@@ -42,6 +42,8 @@ class Login:
             result = cr.fetchall()
             if len(result)>0:
                 messagebox.showinfo("Login", "SuccessFully Login")
+                self.root.destroy()
+                main()
             else:
                 messagebox.showinfo("Login", "Wrong Password or Email")
 

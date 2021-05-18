@@ -7,7 +7,7 @@ from addCategory import AddCategory
 from addEmploy import AddEmploy
 from viewEmploy import viewEmploy
 from viewRost import Rost
-
+from viewAttendanceByNameOrID import viewAttendaceByNameOrId
 
 class main:
     def __init__(self):
@@ -41,6 +41,12 @@ class main:
         menubar.add_cascade(label='Duty Rost', menu=dutyRostMenu)
         dutyRostMenu.add_command(label='Add Duty Rost', command=viewEmploy)
         dutyRostMenu.add_command(label='View Duty Rost', command=Rost)
+        self.root.config(menu=menubar)
+
+        viewAttendanceEmploy = Menu(menubar, tearoff = 0)
+        menubar.add_cascade(label='Attendence', menu=viewAttendanceEmploy)
+        viewAttendanceEmploy.add_command(label='Attendacne employ by Name', command=viewAttendaceByNameOrId)
+        # viewAttendanceEmploy.add_command(label='View Duty Rost', command=Rost)
         self.root.config(menu=menubar)
 
         Label(self.root, text="Attendance System", font=('arial',24,'bold', 'underline'),background='white').pack(pady=50)

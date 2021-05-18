@@ -1,4 +1,3 @@
-
 from connections import makeConnections, checkNumber, checkEmail
 from tkinter import *
 from tkinter import ttk
@@ -8,8 +7,7 @@ import pandas as pd
 import datetime
 
 
-
-class viewAttendace:
+class viewAttendaceByNameOrId:
     def __init__(self):
         self.root = Tk()
         self.root.title("View Attendacne")
@@ -21,10 +19,10 @@ class viewAttendace:
         self.en_search = Entry(main)
         search.grid(row=0, column=0)
         self.en_search.grid(row=0, column=1)
-        btnSearch = Button(main, text='Search')
+        btnSearch = Button(main, text='Search', command =self.btnViewAttend)
         btnSearch.grid(row=0, column=2)
 
-        columns = ('id', 'name', 'date', 'time')
+        columns = ('id', 'EmployId', 'name', 'date', 'time')
         self.tree = ttk.Treeview(self.root, selectmode='browse',
                                  column=columns)
         vsb = ttk.Scrollbar(self.root, orient="vertical", command=self.tree.yview)
@@ -39,14 +37,28 @@ class viewAttendace:
 
         # self.tree.bind("<Double-1>", self.onDoubleClick)
 
-        footer= Frame(self.root)
+        footer = Frame(self.root)
         footer.pack(pady=30)
+
+        self.btnViewAttend()
 
         self.root.mainloop()
 
-
     def btnViewAttend(self):
-        query ="SELECT * FROM `Attendance`"
+        search =self.en_search.get()
+        if search !='':
+            query = f"SELECT Attendance.id, employ.name ,Attendance.employ, Attendance.dateOfAttendace, Attendance.timeOfRigister FROM `Attendance` INNER JOIN employ on employ.id=Attendance.employ where employ.id = '{search}' or employ.name LIKE '%{search}%'"
+        else:
+            query = "SELECT Attendance.id, employ.name ,Attendance.employ, Attendance.dateOfAttendace, Attendance.timeOfRigister FROM `Attendance` INNER JOIN employ on employ.id=Attendance.employ "
+        conn = makeConnections()
+        cr = conn.cursor()
+        cr.execute(query)
+        result = cr.fetchall()
+        for k in self.tree.get_children():
+            self.tree.delete(k)
+        for i in range(0, len(result)):
+            self.tree.insert("", value=result[i], index=i)
+
 
 if __name__ == '__main__':
-    viewAttendace()
+    viewAttendaceByNameOrId()
