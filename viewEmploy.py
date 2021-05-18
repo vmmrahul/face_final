@@ -107,7 +107,7 @@ class viewEmploy:
             endDutyDate_month.grid(row=0, column=1)
             self.endDutyDate_en_month = Spinbox(enddutyDateFrame, from_=1, to=12)
             self.endDutyDate_en_month.grid(row=1, column=1)
-
+    
             endDutyDate_year = Label(enddutyDateFrame, text='year')
             endDutyDate_year.grid(row=0, column=2)
             self.endDutyDate_en_year = Spinbox(enddutyDateFrame, from_=2021, to=2050)

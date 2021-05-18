@@ -1,10 +1,11 @@
+import time
+
 import cv2
 import numpy as np
 import face_recognition
 import os
 from connections import makeConnections
 import datetime
-
 
 path = "Images"
 images = []
@@ -13,20 +14,42 @@ myList = os.listdir(path)
 
 
 def getPersionName(id):
-    query ="select name from student where id={} ".format(id)
+    query = "SELECT name FROM `employ` where id={} ".format(id)
     conn = makeConnections()
     cr = conn.cursor()
     cr.execute(query)
     result = cr.fetchone()
     return result[0]
 
+
 def markAttendace(id):
     date = datetime.date.today()
     now = datetime.datetime.now()
-    current_time = now.strftime("%H:%M:%S")
-    query = f"INSERT INTO `Attendance`(`employ`, `dateOfAttendace`, `timeOfRigister`) VALUES ('{id}','{date}','{current_time}')"
+    FMT = "%H:%M:%S"
+    current_time = now.strftime(FMT)
+
+    query1 = "select * from Attendance where employ='{}' ORDER BY id DESC".format(id)
+    conn = makeConnections()
+    cr = conn.cursor()
+    cr.execute(query1)
+    result = cr.fetchall()
 
 
+    if len(result) > 0:
+        if date == result[0][2]:
+            last_AttendTime_with_oneHour = str(result[0][3] + datetime.timedelta(hours=1))
+            if datetime.datetime.strptime(current_time, FMT) > datetime.datetime.strptime(last_AttendTime_with_oneHour,
+                                                                                          FMT):
+                query = f"INSERT INTO `Attendance`(`employ`, `dateOfAttendace`, `timeOfRigister`) VALUES ('{id}','{date}','{current_time}')"
+            else:
+                return False
+        else:
+            query = f"INSERT INTO `Attendance`(`employ`, `dateOfAttendace`, `timeOfRigister`) VALUES ('{id}','{date}','{current_time}')"
+    else:
+        query = f"INSERT INTO `Attendance`(`employ`, `dateOfAttendace`, `timeOfRigister`) VALUES ('{id}','{date}','{current_time}')"
+    cr.execute(query)
+    conn.commit()
+    return True
 
 
 for cl in myList:
@@ -62,14 +85,24 @@ while True:
         faceDistance = face_recognition.face_distance(encodeListKnown, encodeFace)
         matchIndex = np.argmin(faceDistance)
         if matches[matchIndex]:
-            # name = getPersionName(classNames[matchIndex].upper())
-            name = 'name'
+            name = getPersionName(classNames[matchIndex].upper())
+            mark = markAttendace(classNames[matchIndex].upper())
+            if mark:
+                color = (0, 255, 0)
+            else:
+                color = (0, 0, 255)
+            name = name
             print(name)
             y1, x2, y2, x1 = faceLoc
             y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
-            cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.rectangle(img, (x1, y2 - 35), (x2, y2), (0, 255, 0), cv2.FILLED)
+            cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
+            cv2.rectangle(img, (x1, y2 - 35), (x2, y2), color, cv2.FILLED)
             cv2.putText(img, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            print(img.shape)
+
+            if mark:
+                time.sleep(3)
+
 
             cv2.waitKey(1)
 
