@@ -7,11 +7,13 @@ import os
 from connections import makeConnections
 import datetime
 
+
+# read images from folder name Images
 path = "Images"
 images = []
 classNames = []
 myList = os.listdir(path)
-
+#---------------------------------
 
 def getPersionName(id):
     query = "SELECT name FROM `employ` where id={} ".format(id)
@@ -52,12 +54,17 @@ def markAttendace(id):
     return True
 
 
+
+#  read the images and append into className and Image list
 for cl in myList:
+    # image read
     curImage = cv2.imread(f'{path}/{cl}')
     images.append(curImage)
     classNames.append(os.path.splitext(cl)[0])
 
 
+
+# image endcode
 def findEncodings(images):
     encodeList = []
     for img in images:
@@ -70,6 +77,8 @@ def findEncodings(images):
 encodeListKnown = findEncodings(images)
 print("Encoding Complete...")
 
+
+# capture
 cap = cv2.VideoCapture(0)
 while True:
     success, img = cap.read()

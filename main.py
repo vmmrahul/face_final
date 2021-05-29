@@ -8,8 +8,18 @@ from addEmploy import AddEmploy
 from viewEmploy import viewEmploy
 from viewRost import Rost
 from viewAttendanceByNameOrID import viewAttendaceByNameOrId
-
+import datetime
+import sys
+from PIL import ImageTk,Image
 class main:
+    def btnexit(self):
+        sys.exit()
+        exit()
+
+    def CallAddAdmin(self,event):
+        AddAdmin()
+
+
     def __init__(self):
         # self.root = tk.ThemedTk(theme="scidmint")
         self.root = Tk()
@@ -23,9 +33,16 @@ class main:
         menubar.add_cascade(label='File', menu=fileMenu)
 
         fileMenu.add_command(label='Admin', command=AddAdmin)
-        fileMenu.add_command(label='Change Password')
+        # fileMenu.add_command(label='Change Password')
         fileMenu.add_separator()
-        fileMenu.add_command(label='Exit')
+        fileMenu.add_command(label='Exit',command=self.btnexit)
+
+        # shortcut key
+
+        self.root.bind('<F1>', self.CallAddAdmin)
+
+
+        #-----------------------------------------------------
 
         categoryMenu = Menu(menubar, tearoff = 0)
         menubar.add_cascade(label='Category', menu=categoryMenu)
@@ -33,7 +50,7 @@ class main:
         categoryMenu.add_command(label='View Category', command=viewCategory)
 
         employMenu = Menu(menubar, tearoff = 0)
-        menubar.add_cascade(label='criminal', menu=employMenu)
+        menubar.add_cascade(label='Employ', menu=employMenu)
         employMenu.add_command(label='Add Employ', command=AddEmploy)
         employMenu.add_command(label='View Employ', command=viewEmploy)
 
@@ -59,6 +76,32 @@ class main:
 
         RightFrame = Frame(body)
         RightFrame.pack(side=RIGHT)
+        #-----------clock----------------------------------------------------------
+        clock = Label(RightFrame, font=('times', 20, 'bold'), bg='snow')
+        date1 = Label(RightFrame, font=('times', 15, 'bold'), bg='snow')
+        clock.pack(fill=BOTH, expand=1)
+        date1.pack(fill=BOTH, expand=1)
+        def tick():
+            now = datetime.datetime.now()
+            time2 =  str(now.strftime("%I:%M:%S %p"))
+            time3 = str(now.strftime("%A,%d-%b-%y"))
+            clock.config(text=time2)
+            date1.config(text=time3)
+            clock.after(200, tick)
+        tick()
+
+        # Images
+        # image
+
+        path = "./images/download.jpeg"
+        img = ImageTk.PhotoImage(Image.open(path))
+        lb1 = Label(RightFrame, image=img,bg='snow')
+        lb1.pack(padx=150,pady=20)
+
+
+
+
+
 
         self.root.mainloop()
 

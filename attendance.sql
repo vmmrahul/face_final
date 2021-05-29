@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 13, 2021 at 08:37 AM
--- Server version: 10.4.17-MariaDB
--- PHP Version: 8.0.2
+-- Generation Time: May 23, 2021 at 06:49 AM
+-- Server version: 10.4.13-MariaDB
+-- PHP Version: 7.4.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -55,6 +55,15 @@ CREATE TABLE `Attendance` (
   `dateOfAttendace` date NOT NULL,
   `timeOfRigister` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `Attendance`
+--
+
+INSERT INTO `Attendance` (`id`, `employ`, `dateOfAttendace`, `timeOfRigister`) VALUES
+(42, 2, '2021-05-17', '08:16:46'),
+(43, 3, '2021-05-01', '09:22:07'),
+(44, 2, '2021-05-17', '11:22:44');
 
 -- --------------------------------------------------------
 
@@ -473,7 +482,7 @@ ALTER TABLE `employ`
 -- AUTO_INCREMENT for table `Attendance`
 --
 ALTER TABLE `Attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `dutyRoaster`
